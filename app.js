@@ -662,4 +662,6 @@ const EntaneerQuizApp = () => {
   return null;
 };
 
-ReactDOM.render(React.createElement(EntaneerQuizApp), document.getElementById('root'));
+// Copy the entire React component code from the artifact here
+// Replace the export line at the bottom with:
+ReactDOM.render(<EntaneerQuizApp />, document.getElementById('root'));
