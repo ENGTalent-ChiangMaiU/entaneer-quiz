@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ChevronRight, Star, Zap, Users, Brain, Heart, Trophy, Sparkles } from 'lucide-react';
+const { useState } = React;
+const { ChevronRight, Star, Zap, Users, Brain, Heart, Trophy, Sparkles } = LucideReact;
 
 const EntaneerQuizApp = () => {
   const [currentStep, setCurrentStep] = useState(0);
