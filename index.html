@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entaneer Persona Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .thai-text {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .option:hover {
+            background: #f8f9ff;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 3px;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            margin-left: 10px;
+        }
+
+        .result-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .persona-result {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .score-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .score-item {
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .word-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .word-option {
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .word-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .word-option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .final-persona {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            border: 3px solid transparent;
+            border-image: linear-gradient(45deg, #667eea, #764ba2) 1;
+            border-radius: 15px;
+        }
+
+        .inspiration {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e1e1;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Step 1: Student Information -->
+        <div id="step1" class="card">
+            <div class="header">
+                <div class="logo">ENTANEER</div>
+                <div class="subtitle">Discover Your Engineer Identity</div>
+                <div class="thai-text">(ค้นพบตัวตนนักวิศวกรของคุณ)</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="studentName">Your Name (ชื่อของคุณ):</label>
+                <input type="text" id="studentName" placeholder="Enter your name in English">
+            </div>
+            
+            <div class="form-group">
+                <label for="studentId">Student ID (รหัสนักศึกษา):</label>
+                <input type="text" id="studentId" placeholder="Enter your student ID">
+            </div>
+            
+            <div class="form-group">
+                <label for="yearLevel">Year Level (ชั้นปี):</label>
+                <select id="yearLevel">
+                    <option value="">Select your year level</option>
+                    <option value="1">Year 1 (ปี 1)</option>
+                    <option value="2">Year 2 (ปี 2)</option>
+                    <option value="3">Year 3 (ปี 3)</option>
+                    <option value="4">Year 4 (ปี 4)</option>
+                    <option value="graduate">Graduate (บัณฑิต)</option>
+                </select>
+            </div>
+            
+            <button class="btn" onclick="startQuiz()">Start Quiz (เริ่มทำแบบทดสอบ)</button>
+        </div>
+
+        <!-- Step 2: Quiz Questions -->
+        <div id="step2" class="card hidden">
+            <div class="header">
+                <div class="subtitle">Quiz Progress (ความคืบหน้า)</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div id="questionCounter">Question 1 of 9</div>
+            </div>
+            
+            <div id="quizContainer"></div>
+            
+            <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question (คำถามถัดไป)</button>
+            <button class="btn" id="finishBtn" onclick="finishQuiz()" style="display: none;">Finish Quiz (เสร็จสิ้นแบบทดสอบ)</button>
+        </div>
+
+        <!-- Step 3: Quiz Results -->
+        <div id="step3" class="card hidden">
+            <div class="header">
+                <div class="subtitle">Your Quiz Results (ผลแบบทดสอบของคุณ)</div>
+            </div>
+            
+            <div class="score-breakdown" id="scoreBreakdown"></div>
+            
+            <div class="result-card">
+                <div class="persona-result" id="personaResult"></div>
+                <div id="personaDescription"></div>
+            </div>
+            
+            <button class="btn" onclick="createFuturePersona()">Create Your Future Entaneer Persona (สร้างบุคลิกนักวิศวกรอนาคตของคุณ)</button>
+        </div>
+
+        <!-- Step 4: Future Persona Creation -->
+        <div id="step4" class="card hidden">
+            <div class="header">
+                <div class="subtitle">Create Your Future Entaneer Persona</div>
+                <div class="thai-text">(สร้างบุคลิกนักวิศวกรอนาคตของคุณ)</div>
+            </div>
+            
+            <p style="margin-bottom: 20px; text-align: center;">
+                Select 2-3 words that represent who you want to become as an engineer
+                <br><span class="thai-text">(เลือก 2-3 คำที่แสดงถึงสิ่งที่คุณต้องการเป็นในฐานะนักวิศวกร)</span>
+            </p>
+            
+            <div class="word-selection" id="wordSelection"></div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="btn" onclick="selectRandomWords()">Let AI Choose For Me (ให้ AI เลือกให้)</button>
+                <button class="btn btn-secondary" onclick="confirmWordSelection()">Confirm Selection (ยืนยันการเลือก)</button>
+            </div>
+            
+            <div id="selectedWordsDisplay" style="text-align: center; margin: 20px 0; font-weight: bold;"></div>
+        </div>
+
+        <!-- Step 5: Final Persona -->
+        <div id="step5" class="card hidden">
+            <div class="header">
+                <div class="subtitle">Your Future Entaneer Persona</div>
+                <div class="thai-text">(บุคลิกนักวิศวกรอนาคตของคุณ)</div>
+            </div>
+            
+            <div class="final-persona" id="finalPersona"></div>
+            
+            <div class="inspiration" id="inspirationMessage"></div>
+            
+            <div style="text-align: center;">
+                <button class="btn download-btn" onclick="downloadResults()">Download Your Results (ดาวน์โหลดผลลัพธ์)</button>
+                <button class="btn btn-secondary" onclick="restartQuiz()">Take Quiz Again (ทำแบบทดสอบใหม่)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz data
+        const questions = [
+            {
+                question: "When facing a complex engineering problem, you typically:",
+                thai: "(เมื่อเจอปัญหาทางวิศวกรรมที่ซับซ้อน คุณมักจะ:)",
+                options: [
+                    { text: "Break it down methodically and analyze each component systematically", thai: "(แบ่งแยกอย่างเป็นระบบและวิเคราะห์แต่ละส่วนอย่างเป็นระบบ)", type: "confidence" },
+                    { text: "Reach out to colleagues and form a team to tackle it together", thai: "(ติดต่อเพื่อนร่วมงานและสร้างทีมเพื่อแก้ไขร่วมกัน)", type: "connectivity" },
+                    { text: "Research similar problems and brainstorm innovative solutions", thai: "(ค้นคว้าปัญหาที่คล้ายกันและระดมความคิดหาแนวทางแก้ไขที่นวัตกรรม)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "Your ideal engineering project would involve:",
+                thai: "(โครงการวิศวกรรมในอุดมคติของคุณจะเกี่ยวข้องกับ:)",
+                options: [
+                    { text: "Optimizing an existing system to achieve maximum efficiency", thai: "(ปรับปรุงระบบที่มีอยู่เพื่อให้มีประสิทธิภาพสูงสุด)", type: "confidence" },
+                    { text: "Collaborating with interdisciplinary teams from different countries", thai: "(ร่วมมือกับทีมสหวิทยาการจากประเทศต่างๆ)", type: "connectivity" },
+                    { text: "Developing a solution that addresses a real-world social issue", thai: "(พัฒนาแนวทางแก้ไขที่ตอบโจทย์ปัญหาสังคมในโลกแห่งความจริง)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "When learning new technology, you prefer to:",
+                thai: "(เมื่อเรียนรู้เทคโนโลยีใหม่ คุณชอบที่จะ:)",
+                options: [
+                    { text: "Study the fundamentals thoroughly before applying them", thai: "(ศึกษาพื้นฐานอย่างละเอียดก่อนนำไปใช้)", type: "confidence" },
+                    { text: "Learn through online communities and peer discussions", thai: "(เรียนรู้ผ่านชุมชนออนไลน์และการอภิปรายกับเพื่อน)", type: "connectivity" },
+                    { text: "Experiment hands-on and discover practical applications", thai: "(ทดลองด้วยตนเองและค้นพบการประยุกต์ใช้จริง)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "In group presentations, you usually:",
+                thai: "(ในการนำเสนอกลุ่ม คุณมักจะ:)",
+                options: [
+                    { text: "Prepare detailed analysis and present with confidence", thai: "(เตรียมการวิเคราะห์ละเอียดและนำเสนอด้วยความมั่นใจ)", type: "confidence" },
+                    { text: "Facilitate discussions and ensure everyone contributes", thai: "(อำนวยความสะดวกในการอภิปรายและดูแลให้ทุกคนมีส่วนร่วม)", type: "connectivity" },
+                    { text: "Focus on demonstrating real-world impact and implementation", thai: "(มุ่งเน้นการแสดงให้เห็นผลกระทบในโลกจริงและการนำไปใช้)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "Your biggest motivation as an engineer is:",
+                thai: "(แรงจูงใจที่ใหญ่ที่สุดของคุณในฐานะนักวิศวกรคือ:)",
+                options: [
+                    { text: "Mastering complex technical skills and achieving personal excellence", thai: "(การเชี่ยวชาญทักษะทางเทคนิคที่ซับซ้อนและบรรลุความเป็นเลิศส่วนบุคคล)", type: "confidence" },
+                    { text: "Building networks and working with diverse teams globally", thai: "(การสร้างเครือข่ายและทำงานกับทีมที่หลากหลายทั่วโลก)", type: "connectivity" },
+                    { text: "Creating solutions that make a meaningful difference in society", thai: "(การสร้างแนวทางแก้ไขที่สร้างความแตกต่างอย่างมีความหมายในสังคม)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "When a project hits obstacles, you tend to:",
+                thai: "(เมื่อโครงการเจออุปสรรค คุณมักจะ:)",
+                options: [
+                    { text: "Persist with determination and find alternative approaches", thai: "(ยืนหยัดด้วยความมุ่งมั่นและหาแนวทางทางเลือก)", type: "confidence" },
+                    { text: "Seek advice from mentors and collaborate with team members", thai: "(ขอคำแนะนำจากที่ปรึกษาและร่วมมือกับสมาชิกในทีม)", type: "connectivity" },
+                    { text: "Pivot quickly and adapt the solution to overcome challenges", thai: "(เปลี่ยนทิศทางอย่างรวดเร็วและปรับแนวทางแก้ไขเพื่อเอาชนะความท้าทาย)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "Your preferred work environment is:",
+                thai: "(สภาพแวดล้อมการทำงานที่คุณชอบคือ:)",
+                options: [
+                    { text: "A well-equipped lab where you can focus on detailed analysis", thai: "(ห้องปฏิบัติการที่มีอุปกรณ์ครบครันที่คุณสามารถมุ่งเน้นการวิเคราะห์ละเอียด)", type: "confidence" },
+                    { text: "An open collaborative space with constant team interaction", thai: "(พื้นที่ร่วมมือแบบเปิดที่มีการปฏิสัมพันธ์ของทีมอย่างต่อเนื่อง)", type: "connectivity" },
+                    { text: "A dynamic setting where you can prototype and test solutions", thai: "(สภาพแวดล้อมที่มีพลวัตที่คุณสามารถสร้างต้นแบบและทดสอบแนวทางแก้ไข)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "You're most proud of engineering work that:",
+                thai: "(คุณภูมิใจที่สุดกับงานวิศวกรรมที่:)",
+                options: [
+                    { text: "Demonstrates technical excellence and precision", thai: "(แสดงให้เห็นความเป็นเลิศทางเทคนิคและความแม่นยำ)", type: "confidence" },
+                    { text: "Brings together people from different backgrounds successfully", thai: "(นำคนจากภูมิหลังต่างๆ มาร่วมมือกันได้สำเร็จ)", type: "connectivity" },
+                    { text: "Solves problems others thought were impossible", thai: "(แก้ปัญหาที่คนอื่นคิดว่าเป็นไปไม่ได้)", type: "problemSolver" }
+                ]
+            },
+            {
+                question: "When explaining your engineering work to others, you emphasize:",
+                thai: "(เมื่ออธิบายงานวิศวกรรมของคุณให้คนอื่นฟัง คุณเน้นที่:)",
+                options: [
+                    { text: "The technical methodology and rigorous analysis involved", thai: "(วิธีการทางเทคนิคและการวิเคราะห์อย่างเข้มงวดที่เกี่ยวข้อง)", type: "confidence" },
+                    { text: "The collaborative process and diverse perspectives incorporated", thai: "(กระบวนการร่วมมือและมุมมองที่หลากหลายที่นำมาผสมผสาน)", type: "connectivity" },
+                    { text: "The real-world problems solved and positive changes created", thai: "(ปัญหาในโลกจริงที่ได้รับการแก้ไขและการเปลี่ยนแปลงเชิงบวกที่เกิดขึ้น)", type: "problemSolver" }
+                ]
+            }
+        ];
+
+        const wordList = {
+            confidence: [
+                "Analytical", "Methodical", "Determined", "Precise", "Systematic", 
+                "Resilient", "Focused", "Rigorous", "Persistent", "Meticulous",
+                "Disciplined", "Excellence-seeking", "Quality-focused", "Standards-driven"
+            ],
+            connectivity: [
+                "Collaborative", "Communicative", "Adaptive", "Global", "Integrative",
+                "Social", "Bridge-building", "Diplomatic", "Harmonizing", "Team-oriented",
+                "Inclusive", "Network-building", "Cross-functional", "Partnership-focused"
+            ],
+            problemSolver: [
+                "Innovative", "Transformative", "Impactful", "Creative", "Revolutionary",
+                "Pioneering", "Visionary", "Dynamic", "Solution-oriented", "Change-driving",
+                "Groundbreaking", "Forward-thinking", "Game-changing", "Implementation-focused"
+            ]
+        };
+
+        // Global variables
+        let currentQuestion = 0;
+        let answers = [];
+        let scores = { confidence: 0, connectivity: 0, problemSolver: 0 };
+        let studentData = {};
+        let selectedWords = [];
+        let allResults = [];
+
+        function startQuiz() {
+            const name = document.getElementById('studentName').value.trim();
+            const id = document.getElementById('studentId').value.trim();
+            const year = document.getElementById('yearLevel').value;
+
+            if (!name || !id || !year) {
+                alert('Please fill in all required information (กรุณากรอกข้อมูลให้ครบถ้วน)');
+                return;
+            }
+
+            studentData = { name, id, year };
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('quizContainer');
+            
+            container.innerHTML = `
+                <div class="question">
+                    <h3>Question ${currentQuestion + 1}: ${question.question}</h3>
+                    <p class="thai-text">${question.thai}</p>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${index})">
+                                <input type="radio" name="q${currentQuestion}" value="${option.type}" id="q${currentQuestion}_${index}">
+                                <div class="option-text">
+                                    <div>${String.fromCharCode(65 + index)}) ${option.text}</div>
+                                    <div class="thai-text">${option.thai}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectOption(optionIndex) {
+            const radio = document.getElementById(`q${currentQuestion}_${optionIndex}`);
+            radio.checked = true;
+            
+            // Remove previous selection styling
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.style.background = 'white';
+                opt.style.borderColor = 'transparent';
+            });
+            
+            // Add selection styling
+            const selectedOption = document.querySelectorAll('.option')[optionIndex];
+            selectedOption.style.background = '#f8f9ff';
+            selectedOption.style.borderColor = '#667eea';
+            
+            answers[currentQuestion] = questions[currentQuestion].options[optionIndex].type;
+            updateButtons();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('questionCounter').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+        }
+
+        function updateButtons() {
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            
+            if (answers[currentQuestion]) {
+                if (currentQuestion < questions.length - 1) {
+                    nextBtn.style.display = 'inline-block';
+                    finishBtn.style.display = 'none';
+                } else {
+                    nextBtn.style.display = 'none';
+                    finishBtn.style.display = 'inline-block';
+                }
+            } else {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            calculateScores();
+            showResults();
+        }
+
+        function calculateScores() {
+            scores = { confidence: 0, connectivity: 0, problemSolver: 0 };
+            
+            answers.forEach(answer => {
+                if (answer) {
+                    scores[answer]++;
+                }
+            });
+        }
+
+        function showResults() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+
+            // Show score breakdown
+            const scoreContainer = document.getElementById('scoreBreakdown');
+            scoreContainer.innerHTML = `
+                <div class="score-item">
+                    <div class="score-number">${scores.confidence}</div>
+                    <div>Self-Confidence<br><span class="thai-text">(ความมั่นใจในตนเอง)</span></div>
+                </div>
+                <div class="score-item">
+                    <div class="score-number">${scores.connectivity}</div>
+                    <div>Connectivity<br><span class="thai-text">(การเชื่อมโยง)</span></div>
+                </div>
+                <div class="score-item">
+                    <div class="score-number">${scores.problemSolver}</div>
+                    <div>Problem Solver & Change Maker<br><span class="thai-text">(ผู้แก้ปัญหาและสร้างการเปลี่ยนแปลง)</span></div>
+                </div>
+            `;
+
+            // Determine dominant persona
+            const maxScore = Math.max(scores.confidence, scores.connectivity, scores.problemSolver);
+            let dominantType = '';
+            let personaDescription = '';
+
+            if (scores.confidence === maxScore) {
+                dominantType = 'Self-Confidence Oriented';
+                personaDescription = 'You are driven by personal mastery and technical excellence. You approach challenges systematically and have the determination to overcome obstacles through careful analysis and persistent effort.';
+            } else if (scores.connectivity === maxScore) {
+                dominantType = 'Connectivity Oriented';
+                personaDescription = 'You thrive on collaboration and building bridges between people, technologies, and ideas. You understand that the best engineering solutions come from diverse perspectives and effective teamwork.';
+            } else {
+                dominantType = 'Problem Solver & Change Maker Oriented';
+                personaDescription = 'You are motivated by impact and transformation. You see engineering as a tool for positive change and are driven to create solutions that address real-world challenges and improve people\'s lives.';
+            }
+
+            document.getElementById('personaResult').textContent = dominantType;
+            document.getElementById('personaDescription').innerHTML = `<p>${personaDescription}</p>`;
+        }
+
+        function createFuturePersona() {
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.remove('hidden');
+            
+            // Display all words
+            const container = document.getElementById('wordSelection');
+            const allWords = [...wordList.confidence, ...wordList.connectivity, ...wordList.problemSolver];
+            
+            container.innerHTML = allWords.map(word => 
+                `<div class="word-option" onclick="toggleWord('${word}')">${word}</div>`
+            ).join('');
+        }
+
+        function toggleWord(word) {
+            const wordElement = document.querySelector(`[onclick="toggleWord('${word}')"]`);
+            
+            if (selectedWords.includes(word)) {
+                selectedWords = selectedWords.filter(w => w !== word);
+                wordElement.classList.remove('selected');
+            } else if (selectedWords.length < 3) {
+                selectedWords.push(word);
+                wordElement.classList.add('selected');
+            } else {
+                alert('You can select maximum 3 words (คุณสามารถเลือกได้สูงสุด 3 คำ)');
+            }
+            
+            updateSelectedWordsDisplay();
+        }
+
+        function selectRandomWords() {
+            selectedWords = [];
+            document.querySelectorAll('.word-option').forEach(el => el.classList.remove('selected'));
+            
+            const allWords = [...wordList.confidence, ...wordList.connectivity, ...wordList.problemSolver];
+            const randomWords = [];
+            
+            while (randomWords.length < 3) {
+                const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+                if (!randomWords.includes(randomWord)) {
+                    randomWords.push(randomWord);
+                }
+            }
+            
+            selectedWords = randomWords;
+            selectedWords.forEach(word => {
+                document.querySelector(`[onclick="toggleWord('${word}')"]`).classList.add('selected');
+            });
+            
+            updateSelectedWordsDisplay();
+        }
+
+        function updateSelectedWordsDisplay() {
+            const display = document.getElementById('selectedWordsDisplay');
+            if (selectedWords.length > 0) {
+                display.innerHTML = `Selected Words: ${selectedWords.join(', ')}<br><span class="thai-text">(คำที่เลือก: ${selectedWords.join(', ')})</span>`;
+            } else {
+                display.innerHTML = '';
+            }
+        }
+
+        function confirmWordSelection() {
+            if (selectedWords.length === 0) {
+                alert('Please select at least 1 word (กรุณาเลือกอย่างน้อย 1 คำ)');
+                return;
+            }
+            
+            showFinalPersona();
+        }
+
+        function showFinalPersona() {
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step5').classList.remove('hidden');
+            
+            const personaName = `The ${selectedWords.join(' & ')} ${studentData.name}`;
+            document.getElementById('finalPersona').textContent = personaName;
+            
+            // Generate inspiration message
+            const inspirationMessages = {
+                '1': 'Start building your foundation with curiosity and determination. Every expert was once a beginner!',
+                '2': 'You\'re developing your skills - keep exploring and connecting theory with practice!', 
+                '3': 'You\'re in the specialization phase - focus on your strengths while staying open to collaboration!',
+                '4': 'You\'re almost there! Prepare to transform from student to professional engineer!',
+                'graduate': 'You\'ve made it! Now go out and make the impact you\'ve envisioned!'
+            };
+            
+            const inspiration = inspirationMessages[studentData.year] || 'Continue your journey with passion and purpose!';
+            document.getElementById('inspirationMessage').innerHTML = `
+                <strong>Your Journey Ahead:</strong><br>
+                ${inspiration}<br>
+                <span class="thai-text">(เส้นทางข้างหน้าของคุณ: ${inspiration})</span>
+            `;
+            
+            // Prepare data for CSV
+            prepareResultsForDownload();
+        }
+
+        function prepareResultsForDownload() {
+            const result = {
+                timestamp: new Date().toISOString(),
+                name: studentData.name,
+                studentId: studentData.id,
+                yearLevel: studentData.year,
+                answers: answers.join(','),
+                confidenceScore: scores.confidence,
+                connectivityScore: scores.connectivity,
+                problemSolverScore: scores.problemSolver,
+                totalScore: scores.confidence + scores.connectivity + scores.problemSolver,
+                selectedWords: selectedWords.join(', '),
+                finalPersona: `The ${selectedWords.join(' & ')} ${studentData.name}`
+            };
+            
+            allResults.push(result);
+        }
+
+        function downloadResults() {
+            const csvHeader = 'Timestamp,Name,Student ID,Year Level,Answers,Confidence Score,Connectivity Score,Problem Solver Score,Total Score,Selected Words,Final Persona\n';
+            
+            const csvData = allResults.map(result => 
+                `"${result.timestamp}","${result.name}","${result.studentId}","${result.yearLevel}","${result.answers}",${result.confidenceScore},${result.connectivityScore},${result.problemSolverScore},${result.totalScore},"${result.selectedWords}","${result.finalPersona}"`
+            ).join('\n');
+            
+            const csvContent = csvHeader + csvData;
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `entaneer_quiz_results_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function restartQuiz() {
+            // Reset all variables
+            currentQuestion = 0;
+            answers = [];
+            scores = { confidence: 0, connectivity: 0, problemSolver: 0 };
+            selectedWords = [];
+            
+            // Hide all steps except first
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step4').classList.add('hidden');
+            document.getElementById('step5').classList.add('hidden');
+            
+            // Clear form
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentId').value = '';
+            document.getElementById('yearLevel').value = '';
+        }
+    </script>
+</body>
+</html>
